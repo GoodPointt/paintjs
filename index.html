@@ -1,13 +1,15 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Web paint</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
-    <script src="app.js" type="module"></script>
   </head>
 
   <body>
+    <script src="app.js" type="module"></script>
+
     <main class="main">
       <form id="toolbar" class="toolbar">
         <div class="tool">
@@ -17,7 +19,6 @@
             value="square"
             id="square"
             class="shape-input"
-            checked
           />
           <label for="square" class="shape square"></label>
         </div>
@@ -29,6 +30,7 @@
             value="circle"
             id="circle"
             class="shape-input"
+            checked
           />
           <label for="circle" class="shape circle"></label>
         </div>
@@ -36,7 +38,7 @@
         <div class="tool">
           <label for="color">Color:</label>
           <input
-            value="#7e22c9"
+            value="#00ff00"
             name="color"
             type="color"
             id="color"
@@ -55,6 +57,7 @@
             value="50"
             class="range-input"
           />
+          <output id="size-output" for="size" class="output">50</output>
         </div>
       </form>
 

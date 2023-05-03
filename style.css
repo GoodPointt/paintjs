@@ -42,7 +42,7 @@ body {
 
   flex-shrink: 0;
 
-  background-color: #7e22c9;
+  background-color: #333;
   cursor: pointer;
 }
 
@@ -59,6 +59,10 @@ body {
   cursor: pointer;
 }
 
+.output {
+  min-width: 20px;
+}
+
 .canvas-wrapper {
   padding: 8px;
 }
@@ -72,5 +76,5 @@ body {
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: white;
-  cursor: pointer;
+  cursor: none;
 }

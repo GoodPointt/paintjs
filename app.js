@@ -1,51 +1,90 @@
-/** 
- Plan
- 0. Explain existing code
- 1. Listen tool changes and save in variables.
- 3. Draw shape on click.
-  - draw on canvas
-  - draw shapes
- 4. Render future shape on hover.
-*/
+import { Canvas } from "./Canvas.js";
 
 const state = {
-  color: "#7e22c9",
+  color: "#00ff00",
   size: 50,
-  shape: "square",
+  shape: "circle",
 };
+const shapes = [];
 
 const toolbarElement = document.querySelector("#toolbar");
+const sizeOutputElement = document.querySelector("#size-output");
+const shapeElements = document.querySelectorAll(".shape");
+const canvasElement = document.querySelector("#canvas");
 
-toolbarElement.addEventListener("input", (event) => {
+const canvas = new Canvas(canvasElement.getContext("2d"));
+
+toolbarElement.addEventListener("input", handleToolbarInput);
+canvasElement.addEventListener("click", handleCanvasClick);
+canvasElement.addEventListener("mousemove", handleCanvasMouseMove);
+window.addEventListener("resize", handlePageResize);
+
+updateToolbarUI();
+setCanvasSize();
+
+function handleToolbarInput(event) {
   const name = event.target.name;
-
-  let value;
-
-  if (event.target.type === "range") {
-    value = event.target.valueAsNumber;
-  } else {
-    value = event.target.value;
-  }
+  const value =
+    event.target.type === "range"
+      ? event.target.valueAsNumber
+      : event.target.value;
 
   state[name] = value;
 
-  console.log(state);
-});
+  updateToolbarUI();
+}
 
-const canvasElement = document.querySelector("#canvas");
-const canvasRect = canvasElement.getBoundingClientRect();
-
-canvasElement.width = canvasRect.width;
-canvasElement.height = canvasRect.height;
-
-const ctx = canvasElement.getContext("2d");
-
-canvasElement.addEventListener("click", (event) => {
+function handleCanvasClick(event) {
   const canvasRect = canvasElement.getBoundingClientRect();
-  const x = event.clientX - canvasRect.x;
-  const y = event.clientY - canvasRect.y;
-  const halfSize = state.size / 2;
+  const x = event.clientX - canvasRect.left;
+  const y = event.clientY - canvasRect.top;
 
-  ctx.fillStyle = state.color;
-  ctx.fillRect(x - halfSize, y - halfSize, state.size, state.size);
-});
+  const newShape = {
+    type: state.shape,
+    size: state.size,
+    color: state.color,
+    x,
+    y,
+  };
+
+  shapes.push(newShape);
+  canvas.render(shapes);
+}
+
+function handleCanvasMouseMove(event) {
+  const canvasRect = canvasElement.getBoundingClientRect();
+  const x = event.clientX - canvasRect.left;
+  const y = event.clientY - canvasRect.top;
+
+  const tempShape = {
+    type: state.shape,
+    size: state.size,
+    color: state.color,
+    opacity: 0.5,
+    x,
+    y,
+  };
+
+  canvas.render([...shapes, tempShape]);
+}
+
+function handlePageResize() {
+  setCanvasSize();
+}
+
+function updateToolbarUI() {
+  sizeOutputElement.textContent = state.size;
+
+  shapeElements.forEach((shapeElement) => {
+    shapeElement.style.backgroundColor = state.color;
+  });
+}
+
+function setCanvasSize() {
+  const canvasRect = canvasElement.getBoundingClientRect();
+
+  canvasElement.style.width = `${canvasRect.width}px`;
+  canvasElement.style.height = `${canvasRect.height}px`;
+  canvasElement.width = canvasRect.width;
+  canvasElement.height = canvasRect.height;
+}
